@@ -27,7 +27,7 @@ Run the simulation by executing the provided code. This will open a Pygame windo
 - Visual Range: Sets the maximum distance at which boids consider other boids in their calculations.
 You can modify these parameters and observe how they affect the behavior of the boids in the simulation.
 
-![Simulator]([https://github.com/edouardrolland/Boids_Simulator/boids.png](https://github.com/edouardrolland/Boids_Simulator/blob/main/boids.png))
+![Simulator](https://github.com/edouardrolland/Boids_Simulator/blob/main/boids.png)
 
 ## Key Components
 
