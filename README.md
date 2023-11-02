@@ -27,6 +27,8 @@ Run the simulation by executing the provided code. This will open a Pygame windo
 - Visual Range: Sets the maximum distance at which boids consider other boids in their calculations.
 You can modify these parameters and observe how they affect the behavior of the boids in the simulation.
 
+![Simulator](https://github.com/edouardrolland/Boids_Simulator/boids.png)
+
 ## Key Components
 
 - Boid class: Represents an individual boid, with attributes like position, velocity, and speed limits. It has methods for avoiding edges, calculating distances between boids, implementing separation, alignment, cohesion, and more.
