@@ -8,7 +8,6 @@ separation_factor = 0
 alignment_factor = 0
 cohesion_factor = 0
 window = (1000, 1000)
-margin = 100
 turnfactor = 0
 
 if __name__ == "__main__":

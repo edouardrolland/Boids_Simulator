@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from scipy.spatial import KDTree
 
 
 class Boid():
@@ -34,7 +35,7 @@ class Boid():
         dy = self.y - boid.y
         return np.sqrt(dx**2 + dy**2)
 
-    def behaviour(self, boids, separation_factor, alignment_factor, cohesion_factor, visual_range):
+    def behaviour(self, boids, separation_factor, alignment_factor, cohesion_factor, visual_range, kdtree):
         # Separation
         self.close_dx = 0
         self.close_dy = 0
@@ -47,10 +48,13 @@ class Boid():
         # Cohesion
         self.xpos_avg = 0
         self.ypos_avg = 0
+        
+        within_radius_indices = kdtree.query_ball_point((self.x, self.y), visual_range)
+        close_boids = [boids[i] for i in within_radius_indices]
 
-        for boid in boids:
+        for boid in close_boids:
 
-            if self.distance_between_boids(boid) < visual_range:
+            if self.distance_between_boids(boid) < 10:
                 self.close_dx += self.x - boid.x
                 self.close_dy += self.y - boid.y
 
@@ -107,9 +111,23 @@ class Boid():
 
 
 if __name__ == "__main__":
-
     window = (1000, 1000)
     visual_range = 20
     projected_range = 10
     boid = Boid(window, visual_range)
+
+    boids = [Boid(window, visual_range) for _ in range(100)]
+    data_points = [(boid.x, boid.y) for boid in boids]
+
+    boids_array = [list(point) for point in data_points]
+
+    kdtree = KDTree(data_array)
+
+    points_within_radius_indices = kdtree.query_ball_point(query_point, radius)
+
+    # Access the objects corresponding to the indices
+    objects_within_radius = [data_objects[i] for i in points_within_radius_indices]
+
+
+
     print(boid.x)

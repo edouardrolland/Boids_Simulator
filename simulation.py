@@ -4,6 +4,7 @@ from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
 import numpy as np
 from boids import Boid
+from scipy.spatial import KDTree
 
 time = 50
 
@@ -34,11 +35,11 @@ class Simulation():
         self.output_turning = TextBox(self.screen, int(self.margin/2) + int(self.window[0]/4) + 20, int(self.margin/6) + 3*int(self.window[1]/120) + 24, 35, 20, fontSize=15, borderColour=(255, 255, 255), textColour=(0, 0, 0), radius=0, text=str(np.around(self.turning_slider.getValue(), 3)))
         self.output_visual = TextBox(self.screen, int(self.margin/2) + int(self.window[0]/4) + 20, int(self.margin/6) + 4*int(self.window[1]/120) + 34, 35, 20, fontSize=15, borderColour=(255, 255, 255), textColour=(0, 0, 0), radius=0, text=str(np.around(self.visual_slider.getValue(), 3)))
 
-        self.output_separation.disable()  # Act as label instead of textbox
-        self.output_alignment.disable()  # Act as label instead of textbox
-        self.output_cohesion.disable()  # Act as label instead of textbox
-        self.output_turning.disable()  # Act as label instead of textbox
-        self.output_visual.disable()  # Act as label instead of textbox
+        self.output_separation.disable()  
+        self.output_alignment.disable()  
+        self.output_cohesion.disable()  
+        self.output_turning.disable()  
+        self.output_visual.disable() 
 
         self.font = pygame.font.Font(None, 18)  # Create a font object
 
@@ -73,11 +74,13 @@ class Simulation():
             text = self.font.render("Visual", True, (0, 0, 0))
             self.screen.blit(text, (self.margin, int(self.margin/6) + 2*int(self.window[1]/120) + 54))
             visual_range = self.visual_slider.getValue()
+
+            kdtree = KDTree([[boid.x, boid.y] for boid in boids])            
             
             for boid in boids:
                 pygame.draw.circle(self.screen, 'red', (boid.x, boid.y), 3)
                 projected_range = 10
-                boid.update(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor)
+                boid.update(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor, kdtree)
 
             for events in pygame.event.get():  # loop through all events
                 if events.type == pygame.QUIT:
