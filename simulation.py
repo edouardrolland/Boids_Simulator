@@ -78,7 +78,7 @@ class Simulation():
             kdtree = KDTree([[boid.x, boid.y] for boid in boids])            
             
             for boid in boids:
-                pygame.draw.circle(self.screen, 'red', (boid.x, boid.y), 3)
+                pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
                 projected_range = 10
                 boid.update(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor, kdtree)
 

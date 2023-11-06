@@ -7,14 +7,14 @@ projected_range = 20
 separation_factor = 0
 alignment_factor = 0
 cohesion_factor = 0
-window = (1000, 1000)
+window = (800, 800)
 turnfactor = 0
 
 if __name__ == "__main__":
 
-    window = (1000, 1000)
+    window = (800, 800)
     margin = 100
-    boids = [Boid(window,margin) for _ in range(1000)]
+    boids = [Boid(window,margin) for _ in range(500)]
     simulation = Simulation(window, margin, 100)
     simulation.graphic_interface()
     simulation.update_animation(boids)

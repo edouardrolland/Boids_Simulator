@@ -64,7 +64,7 @@ class Boid():
 
         for boid in close_boids:
 
-            if self.distance_between_boids(boid) < 8:
+            if self.distance_between_boids(boid) < 12:
                 self.close_dx += self.x - boid.x
                 self.close_dy += self.y - boid.y
 
@@ -109,28 +109,10 @@ class Boid():
         if np.abs(self.vy) < 0.5:
             self.vy = np.sign(self.vy) * 0.8
 
-    def update_velocity(self):
-        
-        self.current_angle = np.arctan2(self.prev_vy, self.prev_vx)
-        self.new_angle = np.arctan2(self.vy, self.vx)
-        
-        self.angle_diff = self.new_angle - self.current_angle
-
-        max_val = 0.2
-
-        if self.angle_diff > max_val:
-            print("coucou")
-            self.vx = self.prev_vx * np.cos(max_val)
-            self.vy = self.prev_vy * np.sin(max_val)
-        else:
-            None
-
-
     def update(self, boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor, kdtree):
 
         self.behaviour(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, kdtree)
         self.avoid_edge(turnfactor)
-        self.update_velocity()
         self.speed_limit()
         
 
@@ -139,6 +121,32 @@ class Boid():
 
         self.prev_vx = self.vx
         self.prev_vy = self.vy
+
+    def draw_triangle(self):
+
+        center = (self.x, self.y)
+        side_length = 8
+        
+        # Convertir l'angle en radians
+        angle_radians = np.arctan2(self.vy, self.vx) + np.pi/2
+
+        triangle = np.array([
+            [-side_length / 2, side_length / 2],
+            [side_length / 2, side_length / 2],
+            [0, -side_length / 1]
+        ])
+
+        # Matrice de rotation
+        rotation_matrix = np.array([
+            [np.cos(angle_radians), -np.sin(angle_radians)],
+            [np.sin(angle_radians), np.cos(angle_radians)]
+        ])
+
+        # Appliquer la rotation en utilisant la multiplication de matrices
+        rotated_triangle = np.dot(triangle, rotation_matrix.T) + center
+
+        return [(int(point[0]), int(point[1])) for point in rotated_triangle]
+
 
 if __name__ == "__main__":
 
