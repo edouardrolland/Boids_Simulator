@@ -64,11 +64,11 @@ class Boid():
 
         for boid in close_boids:
 
-            if self.distance_between_boids(boid) < 12:
+            if self.distance_between_boids(boid) < 12 and self is not boid:
                 self.close_dx += self.x - boid.x
                 self.close_dy += self.y - boid.y
 
-            if self.distance_between_boids(boid) < visual_range:
+            if self.distance_between_boids(boid) < visual_range and self is not boid:
                 self.xvel_avg += boid.vx
                 self.yvel_avg += boid.vy
                 self.neighboring_boids += 1
