@@ -19,14 +19,20 @@ class Boid():
 
         if self.x < 0 or self.x > self.window[0]:
             self.vx = -self.vx
+
+
         if self.y < 0 or self.y > self.window[1]:
             self.vy = -self.vy
+
         if self.x < self.margin:
-            self.vx += turnfactor
+            self.vx = self.vx + turnfactor
+
         if self.x > self.window[0] - self.margin:
-            self.vx -= turnfactor
+            self.vx = self.vx - turnfactor
+
         if self.y < self.margin:
             self.vy += turnfactor
+
         if self.y > self.window[1] - self.margin:
             self.vy -= turnfactor
 
@@ -95,15 +101,14 @@ class Boid():
             self.vy = self.vy/np.abs(self.vy) * 2.5
 
         if np.abs(self.vx) < 0.5:
-            self.vx = np.sign(self.vy) * 0.8
+            self.vx = np.sign(self.vx) * 0.8
 
         if np.abs(self.vy) < 0.5:
             self.vy = np.sign(self.vy) * 0.8
 
-    def update(self, boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor):
+    def update(self, boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor, kdtree):
 
-        self.behaviour(boids, separation_factor, alignment_factor,
-                       cohesion_factor, visual_range)
+        self.behaviour(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, kdtree)
         self.avoid_edge(turnfactor)
         self.speed_limit()
         self.x = self.x + self.vx
@@ -111,6 +116,7 @@ class Boid():
 
 
 if __name__ == "__main__":
+
     window = (1000, 1000)
     visual_range = 20
     projected_range = 10
