@@ -10,7 +10,6 @@ cohesion_factor = 0
 turnfactor = 0
 
 if __name__ == "__main__":
-
     window = (800, 800)
     margin = 100
     boids = [Boid(window,margin) for _ in range(500)]

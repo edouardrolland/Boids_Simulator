@@ -1,7 +1,5 @@
 import numpy as np
-import pygame
-from scipy.spatial import KDTree
-
+from predator import Predator
 
 class Boid():
 
@@ -72,16 +70,34 @@ class Boid():
         else :
             return np.array((0, 0))
         return np.array((vx_avg - self.vx, vy_avg - self.vy))
+    
+    def predator_interaction(self, predator):
+
+        predator_dx = predator.x - self.x #Positif si au dessus
+        predator_dy = predator.y - self.y #Positif si à droite
+        predator_dist = np.sqrt(predator_dx**2 + predator_dy**2)
+        predatorturnfactor = 0.8
+
+        if predator_dist < 50 : 
+            if predator_dy > 0:  # predator above boid
+                self.vy -= predatorturnfactor
+
+            if predator_dy < 0:  # predator below boid
+                self.vy += predatorturnfactor
+
+            if predator_dx > 0:  # predator left of boid
+                self.vx -= predatorturnfactor
+
+            if predator_dx < 0:  # predator right of boid
+                self.vx += predatorturnfactor
 
     def speed_limit(self):
         v_max = 1
         v_min = 0.5
         vel_norm = np.sqrt(self.vx**2 + self.vy**2)        
-    
         if vel_norm > v_max:
             self.vx = (self.vx/vel_norm)*v_max
             self.vy = (self.vy/vel_norm)*v_max
-
         if vel_norm < v_min:
             self.vx = (self.vx/vel_norm)*v_min
             self.vy = (self.vy/vel_norm)*v_min
@@ -108,7 +124,7 @@ class Boid():
 
         return [(int(point[0]), int(point[1])) for point in rotated_triangle]
 
-    def update(self, window, turning_factor, separation_factor, cohesion_factor, alignment_factor,kd_tree, boids, visual_range):
+    def update(self, window, turning_factor, separation_factor, cohesion_factor, alignment_factor,kd_tree, boids, visual_range, predator):
         
         self.potential_repulsion(window, turning_factor)
         close_indices = kd_tree.query_ball_point((self.x, self.y), 15)
@@ -125,6 +141,8 @@ class Boid():
 
         self.ax += alignment_factor * self.alignment(visual_neighbours)[0]
         self.ay += alignment_factor * self.alignment(visual_neighbours)[1]
+
+        self.predator_interaction(predator)
 
         self.speed_limit()
 
