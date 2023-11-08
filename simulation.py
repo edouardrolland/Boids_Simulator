@@ -26,7 +26,7 @@ class Simulation():
         self.separation_slider = Slider(self.screen, x_slider, int(self.margin/6), int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.5, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0, handleThickness=0)
         self.alignment_slider = Slider(self.screen, x_slider, int(self.margin/6) + int(self.window[1]/120) + 10, int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.5, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0, handleThickness=0)
         self.cohesion_slider = Slider(self.screen, x_slider, int(self.margin/6) + 2*int(self.window[1]/120) + 20, int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.5, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0, handleThickness=0)
-        self.turning_slider = Slider(self.screen, x_slider, int(self.margin/6) + 3*int(self.window[1]/120) + 30, int(self.window[0]/8), int(self.window[1]/120), min=0.5, max=1, step=0.01, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0, handleThickness=0)
+        self.turning_slider = Slider(self.screen, x_slider, int(self.margin/6) + 3*int(self.window[1]/120) + 30, int(self.window[0]/8), int(self.window[1]/120), min=0, max=100, step=0.01, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0, handleThickness=0)
         self.visual_slider = Slider(self.screen, x_slider, int(self.margin/6) + 4*int(self.window[1]/120) + 40, int(self.window[0]/8), int(self.window[1]/120), min=0, max=40, step=1, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=15, handleThickness=0)
 
         self.output_separation = TextBox(self.screen, int(self.margin/2) + int(self.window[0]/4) + 20, int(self.margin/6) - int(self.window[1]/120) + 2, 35, 20, fontSize=15, borderColour=(255, 255, 255), textColour=(0, 0, 0), radius=0, text=str(np.around(self.separation_slider.getValue(), 3)))
@@ -42,6 +42,8 @@ class Simulation():
         self.output_visual.disable() 
 
         self.font = pygame.font.Font(None, 18)  # Create a font object
+
+        self.kdtree = KDTree([[boid.x, boid.y] for boid in self.boids]) 
 
 
     def update_animation(self, boids):
@@ -75,13 +77,13 @@ class Simulation():
             self.screen.blit(text, (self.margin, int(self.margin/6) + 2*int(self.window[1]/120) + 54))
             visual_range = self.visual_slider.getValue()
 
-            kdtree = KDTree([[boid.x, boid.y] for boid in boids])            
+            self.kdtree = KDTree([[boid.x, boid.y] for boid in boids])            
             
             for boid in boids:
                 pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
                 projected_range = 10
-                boid.update(boids, separation_factor, alignment_factor, cohesion_factor, visual_range, turnfactor, kdtree)
-
+                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, boids, visual_range)
+                
             for events in pygame.event.get():  # loop through all events
                 if events.type == pygame.QUIT:
                     pygame.quit()

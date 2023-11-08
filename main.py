@@ -11,7 +11,7 @@ turnfactor = 0
 
 if __name__ == "__main__":
 
-    window = (1000, 1000)
+    window = (800, 800)
     margin = 100
     boids = [Boid(window,margin) for _ in range(500)]
     simulation = Simulation(window, margin, 100)
