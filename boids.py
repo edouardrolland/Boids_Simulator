@@ -9,8 +9,8 @@ class Boid():
 
         self.x = np.random.randint(0, window[0])
         self.y = np.random.randint(0, window[1])
-        self.vx = np.random.uniform(0.1, 0.2)
-        self.vy = np.random.uniform(0.1, 0.2)
+        self.vx = np.random.uniform(-0.2, 0.2)
+        self.vy = np.random.uniform(-0.2, 0.2)
 
         self.vx_prev = 0
         self.vy_prev = 0
@@ -38,7 +38,7 @@ class Boid():
             self.close_dx +=  - boid.x + self.x
             self.close_dy += - boid.y + self.y
             total_close += 1
-        
+
         if total_close == 0:
             return np.array((0, 0))
         
@@ -72,19 +72,19 @@ class Boid():
         else :
             return np.array((0, 0))
         return np.array((vx_avg - self.vx, vy_avg - self.vy))
-     
-
-
-    def behaviour(self, window, turning_factor):
-        self.potential_repulsion(window, turning_factor)
 
     def speed_limit(self):
         v_max = 1
+        v_min = 0.5
         vel_norm = np.sqrt(self.vx**2 + self.vy**2)        
     
         if vel_norm > v_max:
             self.vx = (self.vx/vel_norm)*v_max
             self.vy = (self.vy/vel_norm)*v_max
+
+        if vel_norm < v_min:
+            self.vx = (self.vx/vel_norm)*v_min
+            self.vy = (self.vy/vel_norm)*v_min
         else:
             None
 
@@ -109,9 +109,9 @@ class Boid():
         return [(int(point[0]), int(point[1])) for point in rotated_triangle]
 
     def update(self, window, turning_factor, separation_factor, cohesion_factor, alignment_factor,kd_tree, boids, visual_range):
-        self.behaviour(window, turning_factor)
-
-        close_indices = kd_tree.query_ball_point((self.x, self.y), 10)
+        
+        self.potential_repulsion(window, turning_factor)
+        close_indices = kd_tree.query_ball_point((self.x, self.y), 15)
         close_neighbours = [boids[i] for i in close_indices]
 
         self.ax += separation_factor * self.separation(close_neighbours)[0]
