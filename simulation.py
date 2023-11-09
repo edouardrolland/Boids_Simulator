@@ -28,7 +28,7 @@ class Simulation():
         self.separation_slider = Slider(self.screen, x_slider, int(self.margin/6), int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.1, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0.021, handleThickness=0)
         self.alignment_slider = Slider(self.screen, x_slider, int(self.margin/6) + int(self.window[1]/120) + 10, int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.5, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0.22, handleThickness=0)
         self.cohesion_slider = Slider(self.screen, x_slider, int(self.margin/6) + 2*int(self.window[1]/120) + 20, int(self.window[0]/8), int(self.window[1]/120), min=0, max=0.1, step=0.001, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=0.017, handleThickness=0)
-        self.turning_slider = Slider(self.screen, x_slider, int(self.margin/6) + 3*int(self.window[1]/120) + 30, int(self.window[0]/8), int(self.window[1]/120), min=0, max=3, step=0.01, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=1.11, handleThickness=0)
+        self.turning_slider = Slider(self.screen, x_slider, int(self.margin/6) + 3*int(self.window[1]/120) + 30, int(self.window[0]/8), int(self.window[1]/120), min=1, max=3, step=0.01, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=1.11, handleThickness=0)
         self.visual_slider = Slider(self.screen, x_slider, int(self.margin/6) + 4*int(self.window[1]/120) + 40, int(self.window[0]/8), int(self.window[1]/120), min=0, max=40, step=1, color=(0, 0, 0), handleColour=(255, 0, 0), handleRadius=5, initial=15, handleThickness=0)
 
         self.output_separation = TextBox(self.screen, int(self.margin/2) + int(self.window[0]/4) + 40, int(self.margin/6) - int(self.window[1]/120) + 2, 35, 20, fontSize=15, borderColour=(255, 255, 255), textColour=(0, 0, 0), radius=0, text=str(np.around(self.separation_slider.getValue(), 3)))
@@ -85,8 +85,9 @@ class Simulation():
                 pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
                 boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, boids, visual_range, self.predator)
                 
-            self.predator.uptate(self.window, 10)
-            pygame.draw.circle(self.screen, 'blue', (int(self.predator.x), int(self.predator.y)), 5)
+            self.predator.uptate(self.window, 50, self.kdtree, boids)
+            pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())
+            pygame.draw.circle(self.screen, 'green', self.predator.centroid, 5)  
 
             for events in pygame.event.get():  # loop through all events
                 if events.type == pygame.QUIT:

@@ -114,14 +114,11 @@ class Boid():
             [side_length / 2, side_length / 2],
             [0, -side_length / 1]
         ])
-
         rotation_matrix = np.array([
             [np.cos(angle_radians), -np.sin(angle_radians)],
             [np.sin(angle_radians), np.cos(angle_radians)]
         ])
-
         rotated_triangle = np.dot(triangle, rotation_matrix.T) + center
-
         return [(int(point[0]), int(point[1])) for point in rotated_triangle]
 
     def update(self, window, turning_factor, separation_factor, cohesion_factor, alignment_factor,kd_tree, boids, visual_range, predator):
