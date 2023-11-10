@@ -1,14 +1,16 @@
 import numpy as np
 from predator import Predator
+import matplotlib.pyplot as plt
 
 class Boid():
 
     def __init__(self, window, margin):
 
-        self.x = np.random.randint(0, window[0])
-        self.y = np.random.randint(0, window[1])
-        self.vx = np.random.uniform(-0.2, 0.2)
-        self.vy = np.random.uniform(-0.2, 0.2)
+        self.x = np.random.randint(margin, window[0] - margin)
+        self.y = np.random.randint(margin, window[1] - margin)
+
+        self.vx = 0.0
+        self.vy = 0.05
 
         self.vx_prev = 0
         self.vy_prev = 0
@@ -71,6 +73,12 @@ class Boid():
             return np.array((0, 0))
         return np.array((vx_avg - self.vx, vy_avg - self.vy))
     
+    def random_vector(self):
+        random_factor = 0.1
+        ax = np.random.uniform(-random_factor, random_factor)
+        ay = np.random.uniform(-random_factor, random_factor)
+        return np.array((ax, ay))
+    
     def predator_interaction(self, predator):
 
         predator_dx = predator.x - self.x #Positif si au dessus
@@ -91,6 +99,8 @@ class Boid():
             if predator_dx < 0:  # predator right of boid
                 self.vx += predatorturnfactor
 
+
+
     def speed_limit(self):
         v_max = 1
         v_min = 0.5
@@ -101,14 +111,12 @@ class Boid():
         if vel_norm < v_min:
             self.vx = (self.vx/vel_norm)*v_min
             self.vy = (self.vy/vel_norm)*v_min
-        else:
-            None
 
     def draw_triangle(self):
+
         center = (self.x, self.y)
         side_length = 8
         angle_radians = np.arctan2(self.vy, self.vx) + np.pi/2
-
         triangle = np.array([
             [-side_length / 2, side_length / 2],
             [side_length / 2, side_length / 2],
@@ -139,17 +147,23 @@ class Boid():
         self.ax += alignment_factor * self.alignment(visual_neighbours)[0]
         self.ay += alignment_factor * self.alignment(visual_neighbours)[1]
 
+        self.ax = self.ax + self.random_vector()[0]
+        self.ay = self.ay + self.random_vector()[1]
+
         self.predator_interaction(predator)
 
         self.speed_limit()
 
         self.x += self.vx
         self.y += self.vy
+        
         self.vx += self.ax
         self.vy += self.ay
 
-       
+        #Low pass filter
+        alpha = 0.1
+        self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
+        self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
 
-
-        
-
+        self.vx_prev = self.vx
+        self.vy_prev = self.vy
