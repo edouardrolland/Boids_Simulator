@@ -11,6 +11,7 @@ class Predator():
         self.visual_predation = 100
         self.direction = np.arctan2(self.vy, self.vx)
 
+
     def tracking_behaviour(self, kdtree, preys):
         
         speed_norm = np.sqrt(self.vx**2 + self.vy**2)

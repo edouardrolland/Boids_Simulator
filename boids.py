@@ -134,16 +134,22 @@ class Boid():
 
     def update(self, window, turning_factor, separation_factor, cohesion_factor, alignment_factor,kd_tree, boids, visual_range, predator):
         
+
+        #Mandatory, the edges of the simulator should be always active
         self.potential_repulsion(window, turning_factor)
+
+        #Close neighbours ()
         close_indices = kd_tree.query_ball_point((self.x, self.y), 15)
         close_neighbours = [boids[i] for i in close_indices]
 
+        # Flocking Behaviour in general
         self.ax += separation_factor * self.separation(close_neighbours)[0]
         self.ay += separation_factor * self.separation(close_neighbours)[1]
-
+        # We determine the visual neighbours
         visual_indices = kd_tree.query_ball_point((self.x, self.y), visual_range)
         visual_neighbours = [boids[i] for i in visual_indices]
 
+        # Cohesion and alignment
         self.ax += cohesion_factor * self.cohesion(visual_neighbours)[0]
         self.ay += cohesion_factor * self.cohesion(visual_neighbours)[1]
 
@@ -153,6 +159,7 @@ class Boid():
         self.ax = self.ax + self.random_vector()[0]
         self.ay = self.ay + self.random_vector()[1]
 
+        #Predator interaction
         self.predator_interaction(predator)
 
         self.x += self.vx
@@ -167,6 +174,7 @@ class Boid():
         self.vx_prev = self.vx
         self.vy_prev = self.vy
 
+        #Finally we applied a speed limit to prevent the animals from going faster than the speed of light
         self.speed_limit()
 
         
