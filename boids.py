@@ -75,7 +75,7 @@ class Boid():
             vy_avg /= total
         else :
             return np.array((0, 0))
-        return np.array((vx_avg - self.vx, vy_avg - self.vy))
+        return np.array((vx_avg, vy_avg))
     
     def random_vector(self):
         random_factor = 0.1
@@ -169,10 +169,10 @@ class Boid():
 
         #Low pass filter to make the animals moving smoothlys
         alpha = 0.1
-        self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
-        self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
-        self.vx_prev = self.vx
-        self.vy_prev = self.vy
+        #self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
+        #self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
+        #self.vx_prev = self.vx
+        #self.vy_prev = self.vy
 
         #Finally we applied a speed limit to prevent the animals from going faster than the speed of light
         self.speed_limit()
