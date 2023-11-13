@@ -6,15 +6,14 @@ class Predator():
 
         self.x = np.random.randint(0, window[0])
         self.y = np.random.randint(0, window[1])
-        self.vx = 0.8
-        self.vy = 0.8
+        self.vx = 2
+        self.vy = 2
         self.visual_predation = 100
         self.direction = np.arctan2(self.vy, self.vx)
 
     def tracking_behaviour(self, kdtree, preys):
         
         speed_norm = np.sqrt(self.vx**2 + self.vy**2)
-        
         visual_indices = kdtree.query_ball_point((self.x, self.y), self.visual_predation)
         
         if not visual_indices:
@@ -36,10 +35,14 @@ class Predator():
             self.vx = speed_norm * np.cos(direction)
             self.vy = speed_norm * np.sin(direction)
 
+            print('Predator Speed ' + str(self.vx**2 + self.vy**2))
+
             self.direction = direction
             self.closest_prey = closest_prey
 
             self.centroid = [closest_prey.x, closest_prey.y]
+
+            print("Impala's Speed " + str(np.sqrt(closest_prey.vx**2 + closest_prey.vy**2)))
 
     def potential_repulsion(self, window, turning_factor):
         
@@ -58,13 +61,16 @@ class Predator():
         center = (self.x, self.y)
         side_length = 8
         angle_radians = np.arctan2(self.vy, self.vx) + np.pi/2
+        
         triangle = np.array([
             [-side_length / 2, side_length / 2],
             [side_length / 2, side_length / 2],
             [0, -side_length / 1]])
+        
         rotation_matrix = np.array([
             [np.cos(angle_radians), -np.sin(angle_radians)],
             [np.sin(angle_radians), np.cos(angle_radians)]])
+        
         rotated_triangle = np.dot(triangle, rotation_matrix.T) + center
 
         return [(int(point[0]), int(point[1])) for point in rotated_triangle]

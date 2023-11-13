@@ -102,8 +102,8 @@ class Boid():
 
 
     def speed_limit(self):
-        v_max = 1
-        v_min = 0.5
+        v_max = 1.32 #Based on the Impala's max speed, and scale calculations from the lenght of an impala.
+        v_min = 0.1
         vel_norm = np.sqrt(self.vx**2 + self.vy**2)        
         if vel_norm > v_max:
             self.vx = (self.vx/vel_norm)*v_max
@@ -115,7 +115,7 @@ class Boid():
     def draw_triangle(self):
 
         center = (self.x, self.y)
-        side_length = 8
+        side_length = 6
         angle_radians = np.arctan2(self.vy, self.vx) + np.pi/2
         triangle = np.array([
             [-side_length / 2, side_length / 2],
@@ -160,7 +160,7 @@ class Boid():
         self.vx += self.ax
         self.vy += self.ay
 
-        #Low pass filter
+        #Low pass filter to make the animals moving smoothlys
         alpha = 0.1
         self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
         self.vy = alpha * self.vy + (1-alpha)*self.vy_prev

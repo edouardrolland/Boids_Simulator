@@ -1,7 +1,6 @@
 import pygame, sys
 from pygame.locals import*
-import os
-os.environ['SDL_AUDIODRIVER'] = 'directx'
+
 
 pygame.init()
 SCREENWIDTH = 800

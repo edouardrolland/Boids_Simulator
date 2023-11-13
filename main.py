@@ -15,8 +15,8 @@ turnfactor = 0
 if __name__ == "__main__":
     
     window = (1000, 1000)
-    margin = 480
-    boids = [Boid(window,margin) for _ in range(500)]
+    margin = 200
+    boids = [Boid(window,margin) for _ in range(30)]
     simulation = Simulation(window, margin, 100)
     simulation.graphic_interface()
     simulation.update_animation(boids)
