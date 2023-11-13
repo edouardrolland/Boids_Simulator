@@ -53,8 +53,8 @@ class Simulation():
         while True:
 
             self.screen.fill((255, 255, 255))
-            pygame.draw.rect(self.screen, 'black', (self.margin, self.margin, self.window[0] - 2*self.margin, self.window[1] - 2*self.margin))
-            pygame.draw.rect(self.screen, 'white', (self.margin + 2, self.margin + 2, self.window[0] - 2*self.margin - 4, self.window[1] - 2*self.margin - 4))
+            #pygame.draw.rect(self.screen, 'black', (self.margin, self.margin, self.window[0] - 2*self.margin, self.window[1] - 2*self.margin))
+            #pygame.draw.rect(self.screen, 'white', (self.margin + 2, self.margin + 2, self.window[0] - 2*self.margin - 4, self.window[1] - 2*self.margin - 4))
             
             text = self.font.render("Separation", True, (0, 0, 0))
             self.screen.blit(text, (self.margin, int(self.margin/6)-2))

@@ -15,7 +15,7 @@ turnfactor = 0
 if __name__ == "__main__":
     
     window = (1000, 1000)
-    margin = 200
+    margin =   420
     simulation = Simulation(window, margin, 100)
     simulation.graphic_interface()
     simulation.update_animation()

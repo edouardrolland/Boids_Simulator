@@ -6,8 +6,13 @@ class Boid():
 
     def __init__(self, window, margin):
 
-        self.x = np.random.randint(margin, window[0] - 600)
-        self.y = np.random.randint(margin, window[1] - 600)
+        angle = np.random.uniform(0, 2 * np.pi)
+        r = np.random.randint(0, (margin)*0.2)
+        self.x, self.y = (
+            window[0]//2 + int(r * np.cos(angle)),
+            window[0]//2 + int(r * np.sin(angle))
+        )
+
         self.vx = 0.0
         self.vy = 0.05
         self.vx_prev = 0
@@ -84,7 +89,7 @@ class Boid():
         predator_dy = predator.y - self.y #Positif si à droite
 
         predator_dist = np.sqrt(predator_dx**2 + predator_dy**2)
-        predatorturnfactor = 0
+        predatorturnfactor = 0.2
 
         if predator_dist < 50 : 
             if predator_dy > 0:  # predator above boid

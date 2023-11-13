@@ -28,7 +28,7 @@ class Predator():
             closest_prey_index = min(visual_indices, key=lambda i: np.linalg.norm(np.array([preys[i].x, preys[i].y]) - np.array([self.x, self.y])))
             closest_prey = preys[closest_prey_index]
             
-            # Calculer la direction vers la proie la plus proche
+            # Compute the closest prey's direction
             direction = np.arctan2(closest_prey.y - self.y, closest_prey.x - self.x)
 
             # Update the predator's speed
@@ -39,8 +39,8 @@ class Predator():
             self.closest_prey = closest_prey
 
             self.centroid = [closest_prey.x, closest_prey.y]
-
-            if np.linalg.norm(np.array([self.x, self.y]) - np.array([closest_prey.x, closest_prey.y])) < 2: #If the prey is closed to the predator, the prey is eaten
+            #If the prey is closed to the predator, the prey is eaten
+            if np.linalg.norm(np.array([self.x, self.y]) - np.array([closest_prey.x, closest_prey.y])) < 2:
                 preys.remove(closest_prey)
                 
 
