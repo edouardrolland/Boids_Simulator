@@ -48,7 +48,7 @@ class Simulation():
         self.kdtree = KDTree([[boid.x, boid.y] for boid in self.boids]) 
 
 
-    def update_animation(self, boids):
+    def update_animation(self):
 
         while True:
 
@@ -79,13 +79,14 @@ class Simulation():
             self.screen.blit(text, (self.margin, int(self.margin/6) + 2*int(self.window[1]/120) + 54))
             visual_range = self.visual_slider.getValue()
 
-            self.kdtree = KDTree([[boid.x, boid.y] for boid in boids])            
+            self.predator.uptate(self.window, 50, self.kdtree, self.boids)
+            self.kdtree = KDTree([[boid.x, boid.y] for boid in self.boids])            
             
-            for boid in boids:
+            for boid in self.boids:
                 pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
-                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, boids, visual_range, self.predator)
+                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, self.boids, visual_range, self.predator)
                 
-            self.predator.uptate(self.window, 50, self.kdtree, boids)
+            
             pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())
             pygame.draw.circle(self.screen, 'green', self.predator.centroid, 5)  
 

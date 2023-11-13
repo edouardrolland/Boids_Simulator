@@ -18,31 +18,31 @@ class Predator():
         
         if not visual_indices:
         
-            # Aucune proie visible, déplacement aléatoire
+            # Any prey can't be seen, so the predator is randomly moving
             self.vx = self.vx + np.random.uniform(-0.1, 0.1)
             self.vy = self.vy + np.random.uniform(-0.1, 0.1)
             self.centroid = [self.x, self.y]
 
         else:
-            # Trouver la proie la plus proche
+            # Find the closest prey
             closest_prey_index = min(visual_indices, key=lambda i: np.linalg.norm(np.array([preys[i].x, preys[i].y]) - np.array([self.x, self.y])))
             closest_prey = preys[closest_prey_index]
             
             # Calculer la direction vers la proie la plus proche
             direction = np.arctan2(closest_prey.y - self.y, closest_prey.x - self.x)
 
-            # Mettre à jour la vitesse et la direction du prédateur
+            # Update the predator's speed
             self.vx = speed_norm * np.cos(direction)
             self.vy = speed_norm * np.sin(direction)
-
-            print('Predator Speed ' + str(self.vx**2 + self.vy**2))
 
             self.direction = direction
             self.closest_prey = closest_prey
 
             self.centroid = [closest_prey.x, closest_prey.y]
 
-            print("Impala's Speed " + str(np.sqrt(closest_prey.vx**2 + closest_prey.vy**2)))
+            if np.linalg.norm(np.array([self.x, self.y]) - np.array([closest_prey.x, closest_prey.y])) < 2: #If the prey is closed to the predator, the prey is eaten
+                preys.remove(closest_prey)
+                
 
     def potential_repulsion(self, window, turning_factor):
         
@@ -77,14 +77,14 @@ class Predator():
     
     def speed_limit(self):
 
-        v_max = 1
-        v_min = 0.5
+        v_max = 1.68
+        v_min = 1.68
         vel_norm = np.sqrt(self.vx**2 + self.vy**2)        
-        
+        print('vel_norm ' + str(vel_norm))
         if vel_norm > v_max:
             self.vx = (self.vx/vel_norm)*v_max
             self.vy = (self.vy/vel_norm)*v_max
-        
+            
         if vel_norm < v_min:
             self.vx = (self.vx/vel_norm)*v_min
             self.vy = (self.vy/vel_norm)*v_min
@@ -93,11 +93,12 @@ class Predator():
 
         self.tracking_behaviour(kdtree, boids)
         self.potential_repulsion(window, turnfactor)
-        self.speed_limit()
+        
         self.vx += self.ax
         self.vy += self.ay
         self.x += self.vx
         self.y += self.vy
+        self.speed_limit()
 
 
 if __name__ == "__main__":

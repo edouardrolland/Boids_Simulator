@@ -6,17 +6,15 @@ class Boid():
 
     def __init__(self, window, margin):
 
-        self.x = np.random.randint(margin, window[0] - margin)
-        self.y = np.random.randint(margin, window[1] - margin)
-
+        self.x = np.random.randint(margin, window[0] - 600)
+        self.y = np.random.randint(margin, window[1] - 600)
         self.vx = 0.0
         self.vy = 0.05
-
         self.vx_prev = 0
         self.vy_prev = 0
-
         self.ax = 0
         self.ay = 0
+
 
     def potential_repulsion(self, window, turning_factor):
 
@@ -24,7 +22,6 @@ class Boid():
             self.ax = turning_factor*(1/(self.x**2) - 1/((self.x - window[0])**2))
         if self.y != 0 and self.y != window[1]:
             self.ay = turning_factor*(1/(self.y**2) - 1/((self.y - window[1])**2))
-
         if self.x < 0 or self.x > window[0]:
             self.vx = -self.vx
         if self.y < 0 or self.y > window[1]:
@@ -34,6 +31,7 @@ class Boid():
         
         self.close_dx, self.close_dy = 0, 0
         total_close = 0
+
         for boid in close_neighbours:
             self.close_dx +=  - boid.x + self.x
             self.close_dy += - boid.y + self.y
@@ -53,6 +51,7 @@ class Boid():
             total += 1
         
         if total > 0:
+        
             x_avg /= total
             y_avg /= total
         else :
@@ -83,8 +82,9 @@ class Boid():
 
         predator_dx = predator.x - self.x #Positif si au dessus
         predator_dy = predator.y - self.y #Positif si à droite
+
         predator_dist = np.sqrt(predator_dx**2 + predator_dy**2)
-        predatorturnfactor = 0.8
+        predatorturnfactor = 0
 
         if predator_dist < 50 : 
             if predator_dy > 0:  # predator above boid
@@ -98,8 +98,6 @@ class Boid():
 
             if predator_dx < 0:  # predator right of boid
                 self.vx += predatorturnfactor
-
-
 
     def speed_limit(self):
         v_max = 1.32 #Based on the Impala's max speed, and scale calculations from the lenght of an impala.
@@ -152,11 +150,8 @@ class Boid():
 
         self.predator_interaction(predator)
 
-        self.speed_limit()
-
         self.x += self.vx
         self.y += self.vy
-        
         self.vx += self.ax
         self.vy += self.ay
 
@@ -164,6 +159,9 @@ class Boid():
         alpha = 0.1
         self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
         self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
-
         self.vx_prev = self.vx
         self.vy_prev = self.vy
+
+        self.speed_limit()
+
+        

@@ -16,7 +16,6 @@ if __name__ == "__main__":
     
     window = (1000, 1000)
     margin = 200
-    boids = [Boid(window,margin) for _ in range(30)]
     simulation = Simulation(window, margin, 100)
     simulation.graphic_interface()
-    simulation.update_animation(boids)
+    simulation.update_animation()
