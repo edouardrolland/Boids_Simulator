@@ -63,7 +63,10 @@ class Boid():
 
         for boid in visual_neighbours:
             if boid.stress != 0.0:
-                self.stress = boid.stress
+                if boid.stress > self.stress:
+                    self.stress = boid.stress
+                else:
+                    self.stress = self.stress - boid.stress/1000
             vx_avg += boid.vx
             vy_avg += boid.vy
             total += 1
@@ -115,10 +118,20 @@ class Boid():
         if self.stress != 0.0:
             v_max = 1.32 * self.stress #Based on the Impala's max speed, and scale calculations from the lenght of an impala.    
             v_min = 0.1 * self.stress
-            if v_max < 0.1:
-                v_max = 0.05
-                v_min = 0.0
 
+            alpha = 0.01
+
+            if v_max < 0.5:
+                self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
+                self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
+
+            if v_max < 0.1:
+                
+                v_max = 0.05
+                v_min = 0.0            
+                self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
+                self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
+    
         else:
             v_max = 0.05
             v_min = 0.0
