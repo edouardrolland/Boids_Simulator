@@ -10,6 +10,7 @@ class Predator():
         self.vy = 2
         self.visual_predation = 100
         self.direction = np.arctan2(self.vy, self.vx)
+        self.predation_detected = False
 
 
     def tracking_behaviour(self, kdtree, preys):
@@ -25,6 +26,7 @@ class Predator():
             self.centroid = [self.x, self.y]
 
         else:
+            self.predation_detected = True #If a prey is detected, the flag is set to True 
             # Find the closest prey
             closest_prey_index = min(visual_indices, key=lambda i: np.linalg.norm(np.array([preys[i].x, preys[i].y]) - np.array([self.x, self.y])))
             closest_prey = preys[closest_prey_index]

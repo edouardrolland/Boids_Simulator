@@ -87,7 +87,7 @@ class Simulation():
             
             for boid in self.boids:
                 pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
-                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, self.boids, visual_range, self.predator)
+                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, self.boids, visual_range, self.predator, self.predator.predation_detected)
                 
             
             pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())

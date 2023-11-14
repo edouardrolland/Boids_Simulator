@@ -16,6 +16,6 @@ if __name__ == "__main__":
     
     window = (1000, 1000)
     margin =   420
-    simulation = Simulation(window, margin, 300)
+    simulation = Simulation(window, margin, 50)
     simulation.graphic_interface()
     simulation.update_animation()
