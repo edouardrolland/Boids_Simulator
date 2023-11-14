@@ -67,6 +67,8 @@ class Boid():
                     self.stress = boid.stress
                 else:
                     self.stress = self.stress - boid.stress/1000
+
+
             vx_avg += boid.vx
             vy_avg += boid.vy
             total += 1
@@ -118,22 +120,8 @@ class Boid():
         if self.stress != 0.0:
             v_max = 1.32 * self.stress #Based on the Impala's max speed, and scale calculations from the lenght of an impala.    
             v_min = 0.1 * self.stress
-
-            alpha = 0.01
-
-            if v_max < 0.5:
-                self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
-                self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
-
-            if v_max < 0.1:
-                
-                v_max = 0.05
-                v_min = 0.0            
-                self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
-                self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
-    
         else:
-            v_max = 0.05
+            v_max = 0.1
             v_min = 0.0
 
         vel_norm = np.sqrt(self.vx**2 + self.vy**2)        
@@ -146,7 +134,6 @@ class Boid():
             self.vy = (self.vy/vel_norm)*v_min
 
     def draw_triangle(self):
-
         center = (self.x, self.y)
         side_length = 6
         angle_radians = np.arctan2(self.vy, self.vx) + np.pi/2
@@ -167,7 +154,6 @@ class Boid():
         # This line keep the cohesion at the beginning of the simulation to have a herd
         if predation_detected == False:
             cohesion_factor = 0.013
-
 
         #Mandatory, the edges of the simulator should be always active
         self.potential_repulsion(window, turning_factor)
@@ -207,9 +193,10 @@ class Boid():
             Low pass filter to make the animals moving smoothlys in the case that they are chilling
             Keep in Mind that the low pass filter introduce a slight delay before the animals start moving
         '''
-
-        alpha = 0.01
-        if self.stress == 0.0: 
+        
+        alpha = 0.1
+        
+        if self.stress <= 0.2: 
             self.vx = alpha * self.vx + (1-alpha)*self.vx_prev
             self.vy = alpha * self.vy + (1-alpha)*self.vy_prev
             self.vx_prev = self.vx

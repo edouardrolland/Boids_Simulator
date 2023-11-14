@@ -93,6 +93,11 @@ class Simulation():
             pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())
             pygame.draw.circle(self.screen, 'green', self.predator.centroid, 5)  
 
+            if self.predator.eating == True:
+                text_2 = self.font.render("The predator is eating his meal", True, (0, 0, 255))
+                self.screen.blit(text_2, (5, 130))
+
+
             for events in pygame.event.get():  # loop through all events
                 if events.type == pygame.QUIT:
                     pygame.quit()
