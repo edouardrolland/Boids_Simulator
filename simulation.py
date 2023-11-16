@@ -8,7 +8,6 @@ from scipy.spatial import KDTree
 from predator import Predator
 
 time = 50
-
 class Simulation():
 
     def __init__(self, window, margin, Number_of_agents):
@@ -52,63 +51,61 @@ class Simulation():
 
     def update_animation(self):
 
-        while True:
-
-            self.screen.fill((255, 255, 255))
-            #pygame.draw.rect(self.screen, 'black', (self.margin, self.margin, self.window[0] - 2*self.margin, self.window[1] - 2*self.margin))
-            #pygame.draw.rect(self.screen, 'white', (self.margin + 2, self.margin + 2, self.window[0] - 2*self.margin - 4, self.window[1] - 2*self.margin - 4))
-            
-            text = self.font.render("Separation", True, (0, 0, 0))
-            self.screen.blit(text, (5, 10-2))
-            separation_factor = self.separation_slider.getValue()
-            
-            text = self.font.render("Alignment", True, (0, 0, 0))
-            self.screen.blit(text, (5, 10-2 + int(self.window[1]/120) + 10))
-            alignment_factor = self.alignment_slider.getValue()
-            
-            text = self.font.render("Cohesion", True, (0, 0, 0))
-            self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 18))
-            cohesion_factor = self.cohesion_slider.getValue()
-            
-            text = self.font.render("Turning", True, (0, 0, 0))
-            self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 36))
-            turnfactor = self.turning_slider.getValue()
+        self.screen.fill((255, 255, 255))
+        #pygame.draw.rect(self.screen, 'black', (self.margin, self.margin, self.window[0] - 2*self.margin, self.window[1] - 2*self.margin))
+        #pygame.draw.rect(self.screen, 'white', (self.margin + 2, self.margin + 2, self.window[0] - 2*self.margin - 4, self.window[1] - 2*self.margin - 4))
         
-            text = self.font.render("Visual", True, (0, 0, 0))
-            self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 54))
-            visual_range = self.visual_slider.getValue()
+        text = self.font.render("Separation", True, (0, 0, 0))
+        self.screen.blit(text, (5, 10-2))
+        separation_factor = self.separation_slider.getValue()
+        
+        text = self.font.render("Alignment", True, (0, 0, 0))
+        self.screen.blit(text, (5, 10-2 + int(self.window[1]/120) + 10))
+        alignment_factor = self.alignment_slider.getValue()
+        
+        text = self.font.render("Cohesion", True, (0, 0, 0))
+        self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 18))
+        cohesion_factor = self.cohesion_slider.getValue()
+        
+        text = self.font.render("Turning", True, (0, 0, 0))
+        self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 36))
+        turnfactor = self.turning_slider.getValue()
+    
+        text = self.font.render("Visual", True, (0, 0, 0))
+        self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 54))
+        visual_range = self.visual_slider.getValue()
 
-            text = self.font.render("Number of preys remaining:                   " + str(self.Number_of_agents), True, (0, 0, 0))
-            self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 80))
+        text = self.font.render("Number of preys remaining:                   " + str(self.Number_of_agents), True, (0, 0, 0))
+        self.screen.blit(text, (5, 10 + 2*int(self.window[1]/120) + 80))
 
-            self.predator.uptate(self.window, 50, self.kdtree, self.boids)
-            self.Number_of_agents = len(self.boids)
-            self.kdtree = KDTree([[boid.x, boid.y] for boid in self.boids])            
+        self.predator.uptate(self.window, 50, self.kdtree, self.boids)
+        self.Number_of_agents = len(self.boids)
+        self.kdtree = KDTree([[boid.x, boid.y] for boid in self.boids])            
+        
+        for boid in self.boids:
+            pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
+            boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, self.boids, visual_range, self.predator, self.predator.predation_detected)
             
-            for boid in self.boids:
-                pygame.draw.polygon(self.screen, 'red', boid.draw_triangle())
-                boid.update(self.window, turnfactor, separation_factor, cohesion_factor, alignment_factor, self.kdtree, self.boids, visual_range, self.predator, self.predator.predation_detected)
-                
-            
-            pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())
-            pygame.draw.circle(self.screen, 'green', self.predator.centroid, 5)  
+        
+        pygame.draw.polygon(self.screen, 'blue', self.predator.draw_triangle())
+        pygame.draw.circle(self.screen, 'green', self.predator.centroid, 5)  
 
-            if self.predator.eating == True:
-                text_2 = self.font.render("The predator is eating his meal", True, (0, 0, 255))
-                self.screen.blit(text_2, (5, 130))
+        if self.predator.eating == True:
+            text_2 = self.font.render("The predator is eating his meal", True, (0, 0, 255))
+            self.screen.blit(text_2, (5, 130))
 
+        events = pygame.event.get()
+        for events in pygame.event.get():  # loop through all events
+            if events.type == pygame.QUIT:
+                pygame.quit()
+                quit()
 
-            for events in pygame.event.get():  # loop through all events
-                if events.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+        self.output_separation.setText(np.around(self.separation_slider.getValue(),3))
+        self.output_alignment.setText(np.around(self.alignment_slider.getValue(), 3))
+        self.output_cohesion.setText(np.around(self.cohesion_slider.getValue(), 3))
+        self.output_turning.setText(np.around(self.turning_slider.getValue(),3))
+        self.output_visual.setText(np.around(self.visual_slider.getValue(),3))
 
-            self.output_separation.setText(np.around(self.separation_slider.getValue(),3))
-            self.output_alignment.setText(np.around(self.alignment_slider.getValue(), 3))
-            self.output_cohesion.setText(np.around(self.cohesion_slider.getValue(), 3))
-            self.output_turning.setText(np.around(self.turning_slider.getValue(),3))
-            self.output_visual.setText(np.around(self.visual_slider.getValue(),3))
-
-            pygame_widgets.update(events)
-            pygame.display.update()
-            self.clock.tick(time)
+        pygame_widgets.update(events)
+        pygame.display.update()
+        self.clock.tick(time)
